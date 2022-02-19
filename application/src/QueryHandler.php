@@ -4,14 +4,9 @@ namespace src;
 
 class QueryHandler
 {
-    public function handleGet(array $get): string
+    public function handleGet(array $request): string
     {
-        $result = '';
-        foreach ($get as $key=>$item) {
-            if (!preg_match('~\d~', $key)) {
-                $result .= "$key=$item&";
-            }
-        }
-        return rtrim($result, ' &');
+        $order = new Order($request);
+        return $order->toString();
     }
 }
