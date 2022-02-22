@@ -4,13 +4,13 @@ namespace src;
 
 class Order
 {
-    private string $docnumber;
-    private string $totalSum;
-    private string $prepayment;
-    private string $designer;
-    private string $manager;
-    private string $adres;
-    private string $freeDrive;
+    private $docnumber;
+    private $totalSum;
+    private $prepayment;
+    private $designer;
+    private $manager;
+    private $adres;
+    private $freeDrive;
 
     public function __construct(array $request)
     {

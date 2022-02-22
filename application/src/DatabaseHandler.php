@@ -26,4 +26,10 @@ class DatabaseHandler
         return $stmt->fetchAll();
     }
 
+    public function updateDouble(int $id, string $string)
+    {
+        $sql = "UPDATE `rawData` SET `data` = ':string' WHERE `rawData`.`id` = ':id';";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['string'=>$string, 'id'=>$id]);
+    }
 }

@@ -6,21 +6,27 @@ use Error;
 
 class Logger
 {
-    public function log(Error $e)
+    public function logError(Error $e)
     {
         $time = new \DateTime('now');
         $message = sprintf(
             '%s | %s | Line %s | %s' . PHP_EOL,
+            $time->format('d M Y H:i:s'),
             $e->getMessage(),
             $e->getFile(),
-            $e->getLine(),
-            $time->format('d M Y H:i:s')
+            $e->getLine()
         );
         file_put_contents(__DIR__ . '/../errors.log', $message, FILE_APPEND);
     }
 
-    public function logString($string)
+    public function logString($string = 'Success')
     {
-        file_put_contents(__DIR__ . '/../errors.log', $string . PHP_EOL, FILE_APPEND);
+        $time = new \DateTime('now');
+        $message = sprintf(
+            '%s %s' . PHP_EOL,
+            $time->format('d M Y H:i:s'),
+            $string
+        );
+        file_put_contents(__DIR__ . '/../errors.log', $message, FILE_APPEND);
     }
 }
