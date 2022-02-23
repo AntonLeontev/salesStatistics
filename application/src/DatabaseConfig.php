@@ -8,12 +8,16 @@ class DatabaseConfig
     private string $user;
     private string $password;
 
-    public function __construct(string $path)
+    public function __construct()
     {
-        parse_str(rtrim(file_get_contents($path)), $config);
-        $this->dsn = $config['dsn'];
-        $this->user = $config['user'];
-        $this->password = $config['password'];
+        $this->dsn = sprintf(
+            '%s:dbname=%s;host=%s',
+            $_ENV['DB_TYPE'],
+            $_ENV['DB_NAME'],
+            $_ENV['DB_HOST'],
+        );
+        $this->user = $_ENV['DB_USER'];
+        $this->password = $_ENV['DB_PASSWORD'];
     }
 
     /**

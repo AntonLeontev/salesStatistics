@@ -6,8 +6,6 @@ class QueryHandler
 {
     public function handleGet(array $request): string
     {
-//        $order = new Order($request);
-//        return $order->toString();
         $result = '';
         foreach ($request as $key=>$value) {
             $result .= sprintf('%s=%s&', $key, $value);
@@ -16,5 +14,11 @@ class QueryHandler
             return $matches[1];
         }
         return rtrim($result, ' &');
+    }
+
+    public function handlePost(array $request)
+    {
+        $order = new Order($request);
+        return $order->toString();
     }
 }

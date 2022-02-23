@@ -2,3 +2,5 @@ vendor
 .idea
 dbconnect
 errors.log
+application/.env
+.env

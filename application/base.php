@@ -7,7 +7,9 @@ use Twig\Loader\FilesystemLoader;
 
 include_once ('vendor/autoload.php');
 
-$config = new DatabaseConfig(__DIR__ . '/dbconnect');
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->safeLoad();
+$config = new DatabaseConfig();
 $pdo = new PDO($config->getDsn(), $config->getUser(), $config->getPassword());
 $dbHandler = new DatabaseHandler($pdo);
 
