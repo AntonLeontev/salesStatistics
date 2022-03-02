@@ -1,7 +1,10 @@
 <?php
 
 use src\DatabaseConfig;
+use src\Designer;
+use src\Exceptions\DatabaseHandlerException;
 use src\Logger;
+use src\Order;
 use src\QueryHandler;
 use src\DatabaseHandler;
 use Webmozart\Assert\Assert;
@@ -16,18 +19,30 @@ try {
     $queryHandler = new QueryHandler();
     $logger = new Logger();
 
-    $result = $queryHandler->handleGet($_GET);
+    $query = $queryHandler->handleGet($_GET);
 
-    Assert::stringNotEmpty($result);
-    if (preg_match('~[aAаА][- ]?\d{6}-\d{1,2}~', $result)) {
-        $dbHandler->write($result);
-        $logger->logString();
-        $logger->logToTelegram($result . "\n\n#success");
-        return;
+    Assert::stringNotEmpty($query, 'Filter empty queries');
+    Assert::regex($query, '~[aAаА][- ]?\d{6}-\d{1,2}~');
+
+    if (!$dbHandler->write($query)) {
+        throw new DatabaseHandlerException("Query not added to DB: $query");
     }
-    $logger->logString($result);
-    $logger->logToTelegram($result . "\n\n#wrongData");
-} catch (Error $e) {
+    $logger->logString();
+
+    $order = new Order($query);
+
+    Assert::stringNotEmpty($order->getDesigner());
+
+    $designer = new Designer($order->getDesigner());
+    if (!$dbHandler->addDesigner($designer)) {
+        throw new DatabaseHandlerException("Designer not added to DB: $designer");
+    }
+    $logger->logString("Added $designer");
+    $logger->logToTelegram("Added $designer\n\n#designer");
+} catch (Error|Exception $e) {
+    if ($e->getMessage() === 'Filter empty queries') {
+        exit();
+    }
     $logger = new Logger();
     $logger->logError($e);
 }

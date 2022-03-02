@@ -3,13 +3,14 @@
 namespace src;
 
 use Error;
+use Exception;
 
 class Logger
 {
-    public function logError(Error $e)
+    public function logError(Error|Exception $e)
     {
         $message = sprintf(
-            '| %s | %s | Line %s',
+            '%s | %s | Line %s',
             $e->getMessage(),
             $e->getFile(),
             $e->getLine()
@@ -21,7 +22,7 @@ class Logger
     {
         $time = new \DateTime('now');
         $message = sprintf(
-            '%s %s' . PHP_EOL,
+            '%s | %s' . PHP_EOL,
             $time->format('d M Y H:i:s'),
             $string
         );

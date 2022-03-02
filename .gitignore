@@ -4,3 +4,4 @@ dbconnect
 errors.log
 application/.env
 .env
+node_modules
