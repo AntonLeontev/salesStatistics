@@ -18,7 +18,7 @@ try {
     $logger = new Logger();
 
     $query = $queryHandler->handleGet($_GET);
-    $dbHandler->write($query);
+    $dbHandler->writeRawData($query);
     $logger->logString();
 
     //-----Order--------------

@@ -20,7 +20,7 @@ class DatabaseHandler
     /**
      * @throws DatabaseHandlerException
      */
-    public function write(string $string): void
+    public function writeRawData(string $string): void
     {
         Assert::stringNotEmpty($string, 'Filter empty queries');
         Assert::regex($string, '~[aAаА][- ]?\d{6}-\d{1,2}~', "Wrong docnumber: $string");
@@ -35,6 +35,14 @@ class DatabaseHandler
     public function readRawData(string $order = self::ASC): array
     {
         $stmt = $this->pdo->query("SELECT * FROM `rawData` ORDER BY `id` $order");
+        return $stmt->fetchAll();
+    }
+
+    public function readOrders(): array
+    {
+        $stmt = $this->pdo->query(
+            "SELECT `number`, `total_sum`, `prepayment`, `manager`, `address`, `free_drive`, `updated_at` 
+            FROM `orders` ORDER BY `updated_at` DESC");
         return $stmt->fetchAll();
     }
 
