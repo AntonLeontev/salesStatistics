@@ -1,0 +1,16 @@
+{
+    "name": "aner/application",
+    "autoload": {
+        "psr-4": {
+            "src\\": "src\\"
+        }
+    },
+    "require": {
+        "ext-pdo": "*",
+        "webmozart/assert": "^1.10",
+        "ext-curl": "*",
+        "twig/twig": "^3.3",
+        "vlucas/phpdotenv": "^5.4",
+        "phpunit/phpunit": "^9.5"
+    }
+}

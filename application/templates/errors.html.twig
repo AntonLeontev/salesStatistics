@@ -1,0 +1,10 @@
+{% extends "main.html.twig" %}
+{% block title %}Errors{% endblock %}
+{% block page_title %}Errors{% endblock %}
+{% block content %}
+    {% for data in text %}
+        <div style="padding: 2px 10px;">
+            {{ data }}
+        </div>
+    {% endfor %}
+{% endblock %}
