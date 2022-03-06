@@ -16,9 +16,9 @@ class QueryHandler
         return rtrim($result, ' &');
     }
 
-    public function handlePost(array $request)
+    public function parseQuery(string $request): array
     {
-        $order = new Order($request);
-        return $order->toString();
+        parse_str($request, $parsedData);
+        return $parsedData;
     }
 }

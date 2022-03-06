@@ -13,7 +13,7 @@ $config = new DatabaseConfig();
 $pdo = new PDO($config->getDsn(), $config->getUser(), $config->getPassword());
 $dbHandler = new DatabaseHandler($pdo);
 
-$base = $dbHandler->readAll();
+$base = $dbHandler->readRawData(DatabaseHandler::DESC);
 
 $loader = new FilesystemLoader(__DIR__ . '/templates');
 $twig = new Environment($loader);

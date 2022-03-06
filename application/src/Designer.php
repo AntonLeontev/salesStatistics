@@ -14,7 +14,9 @@ class Designer
      */
     public function __construct(string $data)
     {
-        preg_match('/\+?([0-9-() ]{3,})/', $data, $matches);
+        if (!preg_match('/\+?([0-9-() ]{3,})/', $data, $matches)) {
+            throw new DesignerException("Can not create: $data");
+        }
         $phone = $matches[1];
         $this->name = $this->prepareName(str_replace($phone, '', $data));
         $this->phone = $this->preparePhone($phone);

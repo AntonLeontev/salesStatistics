@@ -9,24 +9,23 @@ class Order
     private string $number;
     private int $totalSum;
     private int $prepayment;
-    private string $designer;
     private string $manager;
+    private string $designer;
     private string $address;
     private string $freeDrive;
 
     /**
      * @throws OrderException
      */
-    public function __construct(string $data)
+    public function __construct(array $orderData)
     {
-        parse_str($data, $parsedData);
-        $this->number = $this->handleNumber($parsedData['docnumber']);
-        $this->totalSum = (int) $parsedData['totalSum'];
-        $this->prepayment = (int) $parsedData['prepayment'];
-        $this->designer = $this->replaceUnderlines($parsedData['designer']);
-        $this->manager = $this->handleManager($parsedData['manager']);
-        $this->address = $this->replaceUnderlines($parsedData['adress']);
-        $this->freeDrive = $this->replaceUnderlines($parsedData['freeDrive']);
+        $this->number = $this->handleNumber($orderData['docnumber']);
+        $this->totalSum = (int) $orderData['totalSum'];
+        $this->prepayment = (int) $orderData['prepayment'];
+        $this->manager = $this->handleManager($orderData['manager']);
+        $this->designer = $this->replaceUnderlines($orderData['designer']);
+        $this->address = $this->replaceUnderlines($orderData['adress']);
+        $this->freeDrive = $this->replaceUnderlines($orderData['freeDrive']);
     }
 
     /**
@@ -36,12 +35,12 @@ class Order
     {
         $pattern = "/[aAаА][\-_]?([0-9]{6})[\-_](\d{1,2})[^a-zA-Z0-9]?(\d)?/";
         if (!preg_match($pattern, $data, $matches)) {
-            throw new OrderException('Wrong number: ' . $data);
+            throw new OrderException("Wrong number: $data");
         }
         $result = sprintf('A-%s-%s', $matches[1], $matches[2]);
 
         if (isset($matches[3])) {
-            return $result . '.' . $matches[3];
+            return sprintf('%s.%s', $result, $matches[3]);
         }
         return $result;
     }
@@ -52,15 +51,14 @@ class Order
             return '';
         }
 
-        if (str_starts_with($data, 'Менеджер')) {
-            preg_match('/Менеджер:(.*)/', $data, $manager);
+        if (preg_match('/Менеджер:(.*)/', $data, $manager)) {
             return $this->replaceUnderlines($manager[1]);
         }
 
         return $this->replaceUnderlines($data);
     }
 
-    private function replaceUnderlines(string $data): string
+    protected function replaceUnderlines(string $data): string
     {
         if (!$data) {
             return '';
@@ -95,14 +93,6 @@ class Order
     /**
      * @return string
      */
-    public function getDesigner(): string
-    {
-        return $this->designer;
-    }
-
-    /**
-     * @return string
-     */
     public function getManager(): string
     {
         return $this->manager;
@@ -122,5 +112,18 @@ class Order
     public function getFreeDrive(): string
     {
         return $this->freeDrive;
+    }
+
+    public function __toString()
+    {
+        return $this->getNumber();
+    }
+
+    /**
+     * @return string
+     */
+    public function getDesigner(): string
+    {
+        return $this->designer;
     }
 }

@@ -7,96 +7,80 @@ use src\Exceptions\OrderException;
 
 class OrderTest extends TestCase
 {
+    protected array $input;
+    
+    protected function setUp(): void
+    {
+        $this->input = [
+            'docnumber' => 'A-000000-0',
+            'totalSum' => '',
+            'prepayment' => '',
+            'designer' => '',
+            'manager' => '',
+            'adress' => '',
+            'freeDrive' => '',
+        ];
+    }
+    
     /**
      * @dataProvider handlingNumberPositiveTests
      */
-    public function testHandlingNumber($input, $expected)
-    {
-        $order = new Order($input);
+    public function testHandlingNumber($docnumber, $expected)
+    {        
+        $this->input['docnumber'] = $docnumber;
+        $order = new Order($this->input);
         $this->assertSame($expected, $order->getNumber());
     }
 
     public function handlingNumberPositiveTests()
     {
         return [
-            [
-                'docnumber=№_A-260222-4_от_26_02_22_г_&totalSum=&prepayment=&designer=&manager=&adress=&freeDrive=',
-                'A-260222-4'
-            ],
-            [
-                'docnumber=№_А260222-4_2_этап_от_26_02_22_г_&totalSum=&prepayment=&designer=&manager=&adress=&freeDrive=',
-                'A-260222-4.2'
-            ],
-            [
-                'docnumber=а-260222-12_от_26_02_22_г_&totalSum=&prepayment=&designer=&manager=&adress=&freeDrive=',
-                'A-260222-12'
-            ],
-            [
-                'docnumber=а_260222-12.2_от_26_02_22_г_&totalSum=&prepayment=&designer=&manager=&adress=&freeDrive=',
-                'A-260222-12.2'
-            ],
-            [
-                'docnumber=а260222-12/2_от_26_02_22_г_&totalSum=&prepayment=&designer=&manager=&adress=&freeDrive=',
-                'A-260222-12.2'
-            ],
-            [
-                'docnumber=а_260222-1\2_от_26_02_22_г_&totalSum=&prepayment=&designer=&manager=&adress=&freeDrive=',
-                'A-260222-1.2'
-            ],
-            [
-                'docnumber=а-260222-1-2_от_26_02_22_г_&totalSum=&prepayment=&designer=&manager=&adress=&freeDrive=',
-                'A-260222-1.2'
-            ],
-            [
-                'docnumber=а-260222-1-2_от_26_02_22_г_&totalSum=&prepayment=&designer=&manager=&adress=&freeDrive=',
-                'A-260222-1.2'
-            ],
+            ['№_A-260222-4_от_26_02_22_г_', 'A-260222-4'],
+            ['№_А260222-4_2_этап_от_26_02_22_г_', 'A-260222-4.2'],
+            ['а-260222-12_от_26_02_22_г_', 'A-260222-12'],
+            ['а_260222-12.2_от_26_02_22_г_', 'A-260222-12.2'],
+            ['а260222-12/2_от_26_02_22_г_', 'A-260222-12.2'],
+            ['а_260222-1\2_от_26_02_22_г_', 'A-260222-1.2'],
+            ['а-260222-1-2_от_26_02_22_г_', 'A-260222-1.2'],
+            ['а-260222-1-2_от_26_02_22_г_', 'A-260222-1.2'],
         ];
     }
 
     /**
      * @dataProvider handlingNumberNegativeTests
      */
-    public function testHandlingNumberThrowingException($input)
-    {
+    public function testHandlingNumberThrowingException($docnumber)
+    {        
+        $this->input['docnumber'] = $docnumber;
         $this->expectException(OrderException::class);
-        new Order($input);
+        new Order($this->input);
     }
 
     public function handlingNumberNegativeTests()
     {
         return [
-            ['docnumber=A-_от_26_02_22_г_&totalSum=&prepayment=&designer=&manager=&adress=&freeDrive='],
-            ['docnumber=A-220221_от_26_02_22_г_&totalSum=&prepayment=&designer=&manager=&adress=&freeDrive='],
-            ['docnumber=&totalSum=&prepayment=&designer=&manager=&adress=&freeDrive='],
+            ['A-_от_26_02_22_г_'],
+            ['A-220221_от_26_02_22_г_'],
+            [''],
         ];
     }
 
     /**
      * @dataProvider handlingManagerPositiveTests
      */
-    public function testHandlingManager($input, $expected)
-    {
-        $order = new Order($input);
+    public function testHandlingManager($manager, $expected)
+    {        
+        $this->input['manager'] = $manager;
+        $order = new Order($this->input);
         $this->assertSame($expected, $order->getManager());
     }
 
     public function handlingManagerPositiveTests()
     {
         return [
-            [
-                'docnumber=а260222-1&totalSum=&prepayment=&designer=&manager=Менеджер:_Гертман_Анна_&adress=&freeDrive=',
-                'Гертман Анна'
-            ],
-            [
-                'docnumber=а260222-1&totalSum=&prepayment=&designer=&manager=Менеджер:&adress=&freeDrive=',
-                ''
-            ],
-            [
-                'docnumber=а260222-1&totalSum=&prepayment=&designer=&manager=Гертман_Анна&adress=&freeDrive=',
-                'Гертман Анна'
-            ],
+            ['Менеджер:_Гертман_Анна_', 'Гертман Анна'],
+            ['Менеджер:', ''],
+            ['Гертман_Анна', 'Гертман Анна'],
         ];
     }
-
 }
