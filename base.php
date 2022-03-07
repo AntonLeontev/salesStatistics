@@ -5,7 +5,7 @@ use src\DatabaseHandler;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-include_once ('vendor/autoload.php');
+include_once('vendor/autoload.php');
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();

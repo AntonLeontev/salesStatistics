@@ -1,7 +1,6 @@
 vendor
 .idea
-dbconnect
 errors.log
-application/.env
+.env
 .env
 node_modules

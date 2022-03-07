@@ -2,21 +2,22 @@
 
 namespace src;
 
+use PHPUnit\Framework\TestCase;
 use src\Exceptions\DesignerException;
 
-class DesignerTest extends \PHPUnit\Framework\TestCase
+class DesignerTest extends TestCase
 {
     /**
      * @dataProvider positiveTests
      */
-    public function testCreatingDesignerInstance($input, $expected)
+    public function testCreatingDesignerInstance($input, $expected): void
     {
         $designer = new Designer($input);
         $actual = [$designer->getName(), $designer->getPhone()];
         $this->assertSame($expected, $actual);
     }
 
-    public function positiveTests()
+    public function positiveTests(): array
     {
         return [
             ['Юлия Ситникова +79123456780', ['Юлия Ситникова', '89123456780']],
@@ -29,13 +30,13 @@ class DesignerTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider negativeTests
      */
-    public function testTrowingException($input)
+    public function testTrowingException($input): void
     {
         $this->expectException(DesignerException::class);
         new Designer($input);
     }
 
-    public function negativeTests()
+    public function negativeTests(): array
     {
         return [
             ['Юлия_Ситникова_+79123d456780'],

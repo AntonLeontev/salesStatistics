@@ -8,7 +8,7 @@ use src\Order;
 use src\Designer;
 use src\QueryHandler;
 
-include_once ('vendor/autoload.php');
+include_once('vendor/autoload.php');
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
@@ -48,11 +48,11 @@ if ($_GET['action'] === 'add_orders') {
         foreach ($queries as $query) {
             $parsedQuery = $queryHandler->parseQuery($query['data']);
             $order = new Order($parsedQuery);
-            $orderId = $dbHandler->addOrder($order);
+            $orderId = $dbHandler->handleOrder($order);
             if ($order->getDesigner()) {
                 try {
                     $designer = new Designer($order->getDesigner());
-                    $designerId = $dbHandler->addDesigner($designer);
+                    $designerId = $dbHandler->handleDesigner($designer);
                     $dbHandler->addDesignerInOrder($orderId, $designerId);
                 } catch (DesignerException $e) {
                     $logger->logError($e);
@@ -64,4 +64,4 @@ if ($_GET['action'] === 'add_orders') {
     }
 }
 
-header('Location: http://t91265r5.beget.tech/base.php');
+header('Location: http://t91265r5.beget.tech/base.php?page=orders');
