@@ -23,23 +23,23 @@ class DatabaseConfig
     /**
      * @return string
      */
-    public function getDsn()
+    public function getDsn(): string
     {
         return $this->dsn;
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
-    public function getUser()
+    public function getUser(): string
     {
         return $this->user;
     }
 
     /**
-     * @return mixed|string
+     * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }

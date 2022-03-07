@@ -1,0 +1,18 @@
+{% extends "main.html.twig" %}
+{% block title %}Orders{% endblock %}
+{% block page_title %}Orders{% endblock %}
+{% block content %}
+    <table style="width: 100%;">
+    {% for data in text %}
+        <tr style="padding-bottom: 10px;">
+            <td style="padding-right: 5px;">{{ data.number }}</td>
+            <td>{{ data.updated_at }}</td>
+            <td style="">{{ data.total_sum }} р.</td>
+            <td style="">{{ data.prepayment }} р.</td>
+            <td style="">{{ data.manager }}</td>
+            <td style="">{{ data.address }}</td>
+            <td style="">{{ data.free_drive }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
