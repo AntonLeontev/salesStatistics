@@ -2,5 +2,4 @@ vendor
 .idea
 errors.log
 .env
-.env
 node_modules

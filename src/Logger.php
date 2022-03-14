@@ -18,7 +18,7 @@ class Logger
     {
         $time = new DateTime('now');
         $message = sprintf(
-            '%s | %s | %s | Line %s',
+            '%s | %s | %s | Line %s' . PHP_EOL,
             $time->format('d M Y H:i:s'),
             $e->getMessage(),
             $e->getFile(),
@@ -50,7 +50,7 @@ class Logger
      */
     private function log(string $string): void
     {
-        file_put_contents(__DIR__ . '/application' . $_ENV['LOG_FILE_PATH'], $string, FILE_APPEND);
+        file_put_contents(__DIR__ . '/..' . $_ENV['LOG_FILE_PATH'], $string, FILE_APPEND);
     }
 
     /**
