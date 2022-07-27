@@ -8,7 +8,7 @@ use src\QueryHandler;
 use src\DatabaseHandler;
 
 include_once('vendor/autoload.php');
-try {
+
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->safeLoad();
     $config = new DatabaseConfig();
@@ -17,28 +17,27 @@ try {
     $queryHandler = new QueryHandler();
     $logger = new Logger();
 
+try {
     $query = $queryHandler->handleQuery($_GET);
     $dbHandler->writeRawData($query);
-    $logger->logString('Success');
 
     //-----Order--------------
     $parsedData = $queryHandler->parseQuery($query);
     $order = new Order($parsedData);
     $orderId = $dbHandler->handleOrder($order);
-    $logger->logString($order);
 
-    if ($order->getDesigner()) {
-        $designer = new Designer($order->getDesigner());
-        $designerId = $dbHandler->handleDesigner($designer);
-        $dbHandler->addDesignerInOrder($orderId, $designerId);
-        $logger->logString("New $designer");
+    if (! $order->getDesigner()) {
+        exit();
     }
+
+    $designer = new Designer($order->getDesigner());
+    $designerId = $dbHandler->handleDesigner($designer);
+    $dbHandler->addDesignerInOrder($orderId, $designerId);
 
 } catch (Error|Exception $e) {
     if ($e->getMessage() === 'Filter empty queries') {
         exit();
     }
-    $logger = new Logger();
     $logger->logError($e);
-    $logger->logToTelegram($e->getMessage());
+//    $logger->logToTelegram($e->getMessage());
 }

@@ -25,8 +25,8 @@ if ($_GET['action'] === 'delete_tests') {
 if ($_GET['action'] === 'add') {
     $get = [
         'docnumber'  => 'A000000-0',
-        'totalSum' => '321',
-        'prepayment' => '123',
+        'totalSum' => '322',
+        'prepayment' => '15',
         'designer' => '7_981_000-67-20_TEST',
         'manager' => 'Леонтьев Антон',
         'adress' => '',

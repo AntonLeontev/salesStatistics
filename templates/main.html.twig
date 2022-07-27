@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,19 +8,19 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-<nav style="display: flex; justify-content: left;">
+<header style="display: flex; justify-content: left;">
     <div style="width: 15%;">
         <h1 style="margin: 0;">{% block page_title %}{% endblock %}</h1>
     </div>
-    <div style="width: 100%; display: flex; justify-content: space-evenly; align-items: center;">
-        <a href="/add.php?action=add">TEST BASE</a>
-        <a href="/add.php?action=delete_tests">DELETE TESTS</a>
-        <a id="add_orders" href="#">ADD ORDERS</a>
-        <a href="http://t91265r5.beget.tech/base.php?page=requests">REQUESTS</a>
-        <a href="http://t91265r5.beget.tech/base.php?page=orders">ORDERS</a>
+    <nav style="width: 100%; display: flex; justify-content: space-evenly; align-items: center;">
+        <a href="http://t91265r5.beget.tech/base.php?page=requests">ЗАПРОСЫ</a>
+        <a href="http://t91265r5.beget.tech/base.php?page=orders">ЗАКАЗЫ</a>
         <a href="http://t91265r5.beget.tech/errors.php">LOGS</a>
-    </div>
-</nav>
+        <a href="/add.php?action=add">тест базы</a>
+        <a href="/add.php?action=delete_tests">удалить тест</a>
+        <a id="add_orders" href="#">Добавить заказы</a>
+    </nav>
+</header>
     {% block content %}{% endblock %}
 
 <script>

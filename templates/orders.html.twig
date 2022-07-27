@@ -2,17 +2,41 @@
 {% block title %}Orders{% endblock %}
 {% block page_title %}Orders{% endblock %}
 {% block content %}
+    <div class="statistics">
+        <div class="statistics__heading">Статистика</div>
+        <div class="statistics__data" style="display:flex;">
+            <p>Продажи: {{ report.minSales }}р. / {{ report.maxSales }}р.</p>
+            <p style="padding-left: 30px;">Всего заказов: {{ report.ordersPerMonth }}</p>
+            <p style="padding-left: 30px;">
+                Оплат: {{ report.paidOrders }}.
+                По заказам этого месяца: {{ report.paidThisMonthOrders }}
+            </p>
+        </div>
+    </div>
     <table style="width: 100%;">
-    {% for data in text %}
-        <tr style="padding-bottom: 10px;">
-            <td style="padding-right: 5px;">{{ data.number }}</td>
-            <td>{{ data.updated_at }}</td>
-            <td style="">{{ data.total_sum }} р.</td>
-            <td style="">{{ data.prepayment }} р.</td>
-            <td style="">{{ data.manager }}</td>
-            <td style="">{{ data.address }}</td>
-            <td style="">{{ data.free_drive }}</td>
-        </tr>
-    {% endfor %}
+        <thead style="font-weight: bold">
+            <tr>
+                <td>Номер</td>
+                <td>Обновлен</td>
+                <td>Сумма</td>
+                <td>Предоплата</td>
+                <td>Менеджер</td>
+                <td>Адрес</td>
+                <td>Доступ</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in text %}
+                <tr style="padding-bottom: 10px;">
+                    <td style="padding-right: 5px;">{{ data.number }}</td>
+                    <td>{{ data.updated_at }}</td>
+                    <td style="">{{ data.total_sum }} р.</td>
+                    <td style="">{{ data.prepayment }} р.</td>
+                    <td style="">{{ data.manager }}</td>
+                    <td style="width: 35%">{{ data.address }}</td>
+                    <td style="">{{ data.free_drive }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
 {% endblock %}

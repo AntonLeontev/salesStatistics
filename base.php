@@ -2,6 +2,7 @@
 
 use src\DatabaseConfig;
 use src\DatabaseHandler;
+use src\SalesReportBuilder;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -12,6 +13,7 @@ $dotenv->safeLoad();
 $config = new DatabaseConfig();
 $pdo = new PDO($config->getDsn(), $config->getUser(), $config->getPassword());
 $dbHandler = new DatabaseHandler($pdo);
+$reportBuilder = new SalesReportBuilder($pdo);
 
 $loader = new FilesystemLoader(__DIR__ . '/templates');
 $twig = new Environment($loader);
@@ -22,6 +24,8 @@ if ($_GET['page'] === 'requests') {
 }
 
 if ($_GET['page'] === 'orders') {
-    $base = $dbHandler->readOrders();
-    echo $twig->render('orders.html.twig', ['text'=>$base]);
+    $base = $dbHandler->getOrders();
+    $report = $reportBuilder->build();
+
+    echo $twig->render('orders.html.twig', ['text'=>$base, 'report'=>$report]);
 }

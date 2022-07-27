@@ -47,10 +47,10 @@ class DatabaseHandler
         return $this->pdo->query($sql)->fetchAll();
     }
 
-    public function readOrders(): array
+    public function getOrders(): array
     {
         $sql = 'SELECT `number`, `total_sum`, `prepayment`, `manager`, `address`, `free_drive`, `updated_at` 
-            FROM `orders` ORDER BY `updated_at` DESC LIMIT 50';
+            FROM `orders` ORDER BY `updated_at` DESC LIMIT 100';
         return $this->pdo->query($sql)->fetchAll();
     }
 
@@ -59,7 +59,7 @@ class DatabaseHandler
      */
     public function handleDesigner(Designer $designer): int
     {
-        if ($this->designerExists($designer->getPhone())) {
+        if ($this->designerExists($designer)) {
             return $this->getDesignerId($designer->getPhone());
         }
 
@@ -161,6 +161,10 @@ class DatabaseHandler
         )) {
             throw new DatabaseHandlerException("Order not added to DB: $order");
         }
+
+        if ($order->getPrepayment() > 0) {
+            $this->makePrepaid($order);
+        }
     }
 
     /**
@@ -171,6 +175,10 @@ class DatabaseHandler
      */
     private function updateOrder(Order $order): void
     {
+        if (! $this->isPrepaid($order) && $order->getPrepayment() > 0) {
+            $this->makePrepaid($order);
+        }
+
         $sql = 'UPDATE orders
             SET `total_sum` = ?, `prepayment` = ?, `manager` = ?, `address` = ?, `free_drive` = ?, `updated_at` = NOW() 
             WHERE  `orders`.`number` = ?';
@@ -193,11 +201,12 @@ class DatabaseHandler
     /**
      * Checks if given phone number exists in designers
      *
-     * @param string $phone Phone number
+     * @param Designer $designer Designer object
      * @return bool
      */
-    private function designerExists(string $phone): bool
+    public function designerExists(Designer $designer): bool
     {
+        $phone = $designer->getPhone();
         $sql = 'SELECT `phone` FROM `designers` WHERE `phone`=:phone LIMIT 1';
         $statement = $this->pdo->prepare($sql);
         $statement->execute(['phone'=>$phone]);
@@ -252,5 +261,29 @@ class DatabaseHandler
         $statement->execute(['number'=>$number]);
         $response = $statement->fetch();
         return $response['id'];
+    }
+
+    private function isPrepaid(Order $order): bool
+    {
+        $sql = 'SELECT `prepaid_at` FROM orders WHERE  `orders`.`number` = ? AND `prepaid_at` IS NOT NULL';
+        $statement = $this->pdo->prepare($sql);
+
+        if (! $statement->execute([$order->getNumber()]) ) {
+            throw new DatabaseHandlerException("Can't check prepayment: $order");
+        }
+
+        return (bool) $statement->fetch();
+    }
+
+    private function makePrepaid(Order $order): void
+    {
+        $sql = 'UPDATE orders
+            SET `prepaid_at` = CURDATE() 
+            WHERE  `orders`.`number` = ?';
+        $statement = $this->pdo->prepare($sql);
+
+        if (!$statement->execute([$order->getNumber()])) {
+            throw new DatabaseHandlerException("Can't update prepaid_at: $order");
+        }
     }
 }
